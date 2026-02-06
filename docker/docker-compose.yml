@@ -1,0 +1,52 @@
+version: '3.8'
+services:
+  address-book-frontend:
+    build: ../address-book-frontend/
+    container_name: address-book-frontend
+    ports:
+      - "5173:5173"
+    volumes:
+      - ../address-book-frontend/:/app
+      - /app/node_modules
+    networks:
+      - address-book-frontend-network
+      - address-book-backend-network
+      - address-book-backend-postgres-network
+  address-book-backend:
+    build: ../address-book-backend/
+    container_name: address-book-backend
+    environment:
+      SPRING_DATASOURCE_URL: ${ADDRESS_BOOK_POSTGRES_DATABASE_URL}
+      SPRING_DATASOURCE_USERNAME: ${ADDRESS_BOOK_POSTGRES_USER}
+      SPRING_DATASOURCE_PASSWORD: ${ADDRESS_BOOK_POSTGRES_PASSWORD}
+    ports:
+      - "8080:8080"
+    volumes:
+      - ../address-book-backend/:/app
+    depends_on:
+      - address-book-postgres
+    networks:
+      - address-book-backend-network
+      - address-book-backend-postgres-network
+  address-book-postgres:
+    container_name: address-book-postgres
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: ${ADDRESS_BOOK_POSTGRES_USER}
+      POSTGRES_PASSWORD: ${ADDRESS_BOOK_POSTGRES_PASSWORD}
+      POSTGRES_DB: ${ADDRESS_BOOK_POSTGRES_DB}
+    ports:
+      - "5430:5432"
+    volumes:
+      - ./address-book-init.sql:/docker-entrypoint-initdb.d/init.sql
+      - address-book-postgres-data:/var/lib/postgresql
+    restart: always
+    networks:
+      - address-book-backend-postgres-network
+      - address-book-backend-network
+networks:
+  address-book-backend-network:
+  address-book-frontend-network:
+  address-book-backend-postgres-network:
+volumes:
+  address-book-postgres-data:

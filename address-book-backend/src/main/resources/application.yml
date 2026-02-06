@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: address-book-backend
+  datasource:
+    url: ${ADDRESS_BOOK_POSTGRES_DATABASE_URL}
+    username: ${ADDRESS_BOOK_POSTGRES_USER}
+    password: ${ADDRESS_BOOK_POSTGRES_PASSWORD}
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+      format_sql: true
+      ddl-auto: update
+    show-sql: true
