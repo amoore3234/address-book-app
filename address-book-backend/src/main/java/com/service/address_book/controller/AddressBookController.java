@@ -1,6 +1,7 @@
 package com.service.address_book.controller;
 
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
@@ -63,4 +64,22 @@ public class AddressBookController {
     ResponseEntity.noContent();
   }
 
+  @GetMapping(value="/addressBook/search/{item}")
+  public ResponseEntity<List<AddressBookModel>> searchAddressBook(@PathVariable String item) {
+    List<AddressBookModel> newAddressBooks = new ArrayList<>();
+    List<AddressBookModel> addressBooks = addressBookService.getAddressBooks();
+
+    for (AddressBookModel addressBook : addressBooks) {
+      if (addressBook.getFirstName().equalsIgnoreCase(item)
+        || addressBook.getLastName().equalsIgnoreCase(item)
+        || addressBook.getPhoneNumber().equalsIgnoreCase(item)
+        || addressBook.getHomeAddress().equalsIgnoreCase(item)
+        || addressBook.getHomeCity().equalsIgnoreCase(item)
+        || addressBook.getHomeState().equalsIgnoreCase(item)
+        || addressBook.getHomeZipCode().equalsIgnoreCase(item)) {
+          newAddressBooks.add(addressBook);
+      }
+    }
+    return ResponseEntity.ok().body(newAddressBooks);
+  }
 }
