@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { api } from "../api/api";
 import { useDebounce } from '../hooks/useDebounce';
 import { AddressData } from '../types/address-book';
+import './SearchBarComponent.css'
 
 const SearchBarComponent: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -47,6 +48,7 @@ const SearchBarComponent: React.FC = () => {
     <div className="search-container">
       <input
         type="text"
+        className="search-input" 
         placeholder="Search for something..."
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
@@ -54,9 +56,11 @@ const SearchBarComponent: React.FC = () => {
       
       {isLoading && <p>Loading...</p>}
       
-      <ul>
+      <ul className="results-list">
         {results.map((item) => (
-          <li key={item.id}>{item.firstName} {item.lastName}</li>
+          <div key={item.id} className="result-card">
+          <h4 className="result-title">{item.firstName} {item.lastName}</h4>
+        </div>
         ))}
       </ul>
     </div>
